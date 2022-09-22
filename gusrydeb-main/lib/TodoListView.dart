@@ -8,16 +8,36 @@ import 'package:provider/provider.dart';
 import 'Todolist.dart';
 import 'addtodoview.dart';
 import 'main.dart';
-class TodoListView extends StatelessWidget {
+
+class TodoListView extends StatefulWidget {
+  @override
+  State<TodoListView> createState() => _TodoListViewState();
+  
+}
+
+class _TodoListViewState extends State<TodoListView> {
+  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("TIG169 TODO"),
         centerTitle: true,
+        actions: [PopupMenuButton(
+          onSelected: (value) {
+            Provider.of<MyState>(context, listen: false).setFilterBy(value);
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(child: Text("all"), value: "all"),
+            PopupMenuItem(child: Text("done"), value: "done"),
+            PopupMenuItem(child: Text("not done"), value: "not done"),
+
+          ],
+        )],
       ),
       body: Consumer<MyState>(
-        builder: (context, state, child) => Todolist(state.list),
-      ),
+        builder: (context, state, child) => 
+        Todolist(_filterList(state.list, state.filterBy)),
+          ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
@@ -25,7 +45,7 @@ class TodoListView extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => AddToDoView(ToDo(
-                        message: "",
+                        message: "", checkbox: ,
                       ))));
           if (newCard != null) {
             Provider.of<MyState>(context, listen: false).addCard(newCard);
@@ -34,4 +54,9 @@ class TodoListView extends StatelessWidget {
       ),
     );
   }
+}
+
+List<ToDo>? _filterList(list, filterBy) {
+  if (filterBy == "all") return list;
+  return null;
 }

@@ -4,11 +4,12 @@ import 'dart:js';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'ToDoListView.dart';
 import 'addtodoview.dart';
 import 'main.dart';
-
+import 'InternetFetcher.dart';
 
 class Todolist extends StatelessWidget {
   final List<ToDo> list;
@@ -41,8 +42,16 @@ class ToDo {
 
 class MyState extends ChangeNotifier {
   List<ToDo> _list = [];
+  String _ip = '';
+  bool _loading = false;
 
   List<ToDo> get list => _list;
+  String get ip => _ip;
+  bool get loading => _loading;
+
+  MyState() {
+    fetchIp();
+  }
 
   void addCard(ToDo card) {
     _list.add(card);
@@ -53,6 +62,15 @@ class MyState extends ChangeNotifier {
     _list.remove(card);
     notifyListeners();
   }
+
+  void fetchIp() async {
+    _loading = true;
+    notifyListeners();
+
+    var ip = await InternetFetcher.fetchIp();
+    _loading = false;
+
+    _ip = ip;
+    notifyListeners();
+  }
 }
-
-

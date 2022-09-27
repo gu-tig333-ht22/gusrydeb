@@ -24,7 +24,7 @@ class _TodoListViewState extends State<TodoListView> {
         centerTitle: true,
         actions: [PopupMenuButton(
           onSelected: (value) {
-            Provider.of<MyState>(context, listen: false).setFilterBy(value);
+            Provider.of<MyState>(context, listen: false).setFilterBy();
           },
           itemBuilder: (context) => [
             PopupMenuItem(child: Text("all"), value: "all"),
@@ -45,7 +45,7 @@ class _TodoListViewState extends State<TodoListView> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddToDoView(ToDo(
-                        message: "", checkbox: ,
+                        message: "", checkbox: Checkbox(value: false, onChanged: null),
                       ))));
           if (newCard != null) {
             Provider.of<MyState>(context, listen: false).addCard(newCard);
@@ -58,5 +58,5 @@ class _TodoListViewState extends State<TodoListView> {
 
 List<ToDo>? _filterList(list, filterBy) {
   if (filterBy == "all") return list;
-  return null;
+  return list.sublist(1,3);
 }

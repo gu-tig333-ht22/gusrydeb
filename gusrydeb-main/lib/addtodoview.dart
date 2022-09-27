@@ -82,6 +82,6 @@ class AddToDoViewState extends State<AddToDoView> {
           ]
         )
         )
-            );
+    );
   }
 }

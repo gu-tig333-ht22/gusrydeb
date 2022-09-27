@@ -21,7 +21,7 @@ class Todolist extends StatefulWidget {
 class _TodolistState extends State<Todolist> {
   bool value = false;
 
-  bool _checked = true;
+  bool _checked = true; //fel- hela listan blir checkad
 
   Widget build(BuildContext context) {
     return ListView(
@@ -42,7 +42,9 @@ class _TodolistState extends State<Todolist> {
       onChanged: (val) {
         setState(() {
           _checked = val!;
-          if (val == true) {}
+          if (val == true) {
+            _checked;
+          }
           _checked;
         });
       },

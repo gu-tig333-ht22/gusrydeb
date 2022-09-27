@@ -11,7 +11,6 @@ import 'addtodoview.dart';
 
 void main() {
   var state = MyState();
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => state,
@@ -21,6 +20,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+    const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

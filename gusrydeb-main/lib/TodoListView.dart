@@ -9,14 +9,10 @@ import 'Todolist.dart';
 import 'addtodoview.dart';
 import 'main.dart';
 
-class TodoListView extends StatefulWidget {
-  @override
-  State<TodoListView> createState() => _TodoListViewState();
-  
-}
+class TodoListView extends StatelessWidget {
+    const TodoListView({Key? key}) : super(key: key);
 
-class _TodoListViewState extends State<TodoListView> {
-  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +20,7 @@ class _TodoListViewState extends State<TodoListView> {
         centerTitle: true,
         actions: [PopupMenuButton(
           onSelected: (value) {
-            Provider.of<MyState>(context, listen: false).setFilterBy();
+            Provider.of<MyState>(context, listen: false).setFilterBy("all" , value);
           },
           itemBuilder: (context) => [
             PopupMenuItem(child: Text("all"), value: "all"),
@@ -35,8 +31,7 @@ class _TodoListViewState extends State<TodoListView> {
         )],
       ),
       body: Consumer<MyState>(
-        builder: (context, state, child) => 
-        Todolist(_filterList(state.list, state.filterBy)),
+        builder: (context, state, child) => TodoList(state.list),
           ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -45,8 +40,8 @@ class _TodoListViewState extends State<TodoListView> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddToDoView(ToDo(
-                        message: "", checkbox: Checkbox(value: false, onChanged: null),
-                      ))));
+                        message: " ", isDone: false),
+                      )));
           if (newCard != null) {
             Provider.of<MyState>(context, listen: false).addCard(newCard);
           }
@@ -58,5 +53,9 @@ class _TodoListViewState extends State<TodoListView> {
 
 List<ToDo>? _filterList(list, filterBy) {
   if (filterBy == "all") return list;
-  return list.sublist(1,3);
+  if (filterBy == "done") return list.where((ToDo) => ToDo.isDone == true).toList();
+  else if (filterBy == "not done") {
+      return list.where((ToDo) => ToDo.isDone == false).toList();
+    }
+  return list;
 }

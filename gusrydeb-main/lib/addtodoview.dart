@@ -76,7 +76,7 @@ class AddToDoViewState extends State<AddToDoView> {
             TextButton(
             child: Text("ADD +", style: TextStyle(color: Colors.black, fontWeight: FontWeight. bold)),
             onPressed: () {
-              Navigator.pop(context, ToDo(message: message));
+              Navigator.pop(context, ToDo(message: message, isDone: false ));
             },
           )
           ]

@@ -9,28 +9,29 @@ import 'ToDoListView.dart';
 import 'addtodoview.dart';
 import 'main.dart';
 
-class Todolist extends StatefulWidget {
+class TodoList extends StatelessWidget {
   final List<ToDo> list;
 
-  Todolist(this.list);
+  const TodoList(this.list, {Key? key}) : super(key: key);
 
   @override
-  State<Todolist> createState() => _TodolistState();
-}
-
-class _TodolistState extends State<Todolist> {
-  bool value = false;
-
-  bool _checked = true; //fel- hela listan blir checkad
-
   Widget build(BuildContext context) {
     return ListView(
-        children: widget.list.map((card) => _cardItem(context, card)).toList());
+        children: list.map((ToDo card) => _cardItem(context, card)).toList());
   }
 
   Widget _cardItem(context, card) {
-    return CheckboxListTile(
-      title: Text(card.message),
+    var state = Provider.of<MyState>(context, listen: false);
+    return Container(
+        child: CheckboxListTile(
+      title: Text(
+        card.message,
+        style: (TextStyle(
+          fontSize: 20,
+          decoration: card.isDone ? TextDecoration.lineThrough : null,
+          decorationThickness: 1,
+        )),
+      ),
       secondary: IconButton(
         icon: Icon(Icons.close),
         onPressed: () {
@@ -38,36 +39,44 @@ class _TodolistState extends State<Todolist> {
           state.removeCard(card);
         },
       ),
-      value: _checked,
-      onChanged: (val) {
-        setState(() {
-          _checked = val!;
-          if (val == true) {
-            _checked;
-          }
-          _checked;
-        });
+      controlAffinity: ListTileControlAffinity.leading,
+      value: card.isDone,
+      onChanged: (value) {
+        state;
       },
-    );
+    ));
   }
 }
 
 class ToDo {
-  Checkbox checkbox;
   String message;
+  bool isDone;
 
-  bool value = false;
+  ToDo({required this.message, required this.isDone});
 
-  ToDo({required this.message, required this.checkbox});
+  void ToDoisDone(ToDo todo) {
+    isDone = !isDone;
+  }
+
+  static Map<String, dynamic> toJson(ToDo todo) {
+    return {
+      'title': todo.message,
+      'done': todo.isDone,
+    };
+  }
 }
 
 class MyState extends ChangeNotifier {
   List<ToDo> _list = [];
-  String _filterBy = "all";
+  int _filterBy = 0;
 
   List<ToDo> get list => _list;
+  int get filterBy => _filterBy;
 
-  String get filterBy => _filterBy;
+  void isDone(ToDo card) {
+    card.isDone;
+    notifyListeners();
+  }
 
   void addCard(ToDo card) {
     _list.add(card);
@@ -79,8 +88,13 @@ class MyState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setFilterBy(String filterBy) {
-    this._filterBy = filterBy;
+  void setFilterBy(String filterBy, Object? value) {
+    _filterBy = filterBy as int;
+    notifyListeners();
+  }
+
+  void updatingTodo(ToDo card) {
+    card.ToDoisDone(card);
     notifyListeners();
   }
 }

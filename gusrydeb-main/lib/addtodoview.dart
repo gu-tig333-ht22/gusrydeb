@@ -16,30 +16,17 @@ class AddToDoView extends StatefulWidget {
   AddToDoView(this.card);
 
   @override
-  State<StatefulWidget> createState() {
-    return AddToDoViewState(card);
+  State<StatefulWidget> createState() => AddToDoViewState(card);
   }
-}
 
-class ToDoWidget extends StatelessWidget {
-  final ToDo card;
-
-  ToDoWidget(this.card);
-
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(20.0), child: Text(card.message));
-  }
-}
 
 class AddToDoViewState extends State<AddToDoView> {
   String message = " ";
 
   TextEditingController textEditingController = TextEditingController();
-  
 
   AddToDoViewState(ToDo card) {
-    this.message = card.message;
+    message = card.message;
 
     textEditingController = TextEditingController(text: card.message);
 
@@ -52,36 +39,38 @@ class AddToDoViewState extends State<AddToDoView> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("TIG169 TODO"), 
-        centerTitle: true, 
+        appBar: AppBar(
+          title: Text("TIG169 TODO"),
+          centerTitle: true,
         ),
         body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(height: 24),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: 
-              TextField(
-                controller: textEditingController,
-                decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(width: 5.0, color: Colors.black)), 
-                  hintText: 'What are you going to do?'),
-                ), 
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+              Container(height: 24),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 5.0, color: Colors.black)),
+                      hintText: 'What are you going to do?'),
                 ),
-            Container(height: 24),
-            TextButton(
-            child: Text("ADD +", style: TextStyle(color: Colors.black, fontWeight: FontWeight. bold)),
-            onPressed: () {
-              Navigator.pop(context, ToDo(message: message, isDone: false ));
-            },
-          )
-          ]
-        )
-        )
-    );
+              ),
+              Container(height: 24),
+              TextButton(
+                child: const Text("ADD +",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  Navigator.pop(context, ToDo(message: message, 
+                                              checkbox: const Checkbox(value: false, onChanged: null)));
+                },
+              )
+            ])));
   }
 }
+

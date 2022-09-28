@@ -48,8 +48,7 @@ class _TodoListViewState extends State<TodoListView> {
                   builder: (context) => AddToDoView(
                         ToDo(
                             message: " ",
-                            checkbox:
-                                const Checkbox(value: false, onChanged: null)),
+                             id: ''),
                       )));
           if (newCard != null) {
             Provider.of<MyState>(context, listen: false).addCard(newCard);
@@ -60,24 +59,13 @@ class _TodoListViewState extends State<TodoListView> {
   }
 }
 
-List<ToDo> _filterList(list, filterBy) {
-  if (filterBy == "not done") {
-    List<ToDo> myList = [];
-    for (var i = 0; i < list.length; i++) {
-      // TO DO
-      var currentElement = list[i];
-      if (currentElement.value == false) myList.add(currentElement);
+List<ToDo> _filterList(list, value) {
+ if (value == 'all') return list;
+    if (value == 'done') {
+      return list.where((card) => card.IsDone == true).toList();
+    } else if (value == 'not done') {
+      return list.where((card) => card.IsDone == false).toList();
     }
-    return myList;
+    return list;
   }
-  if (filterBy == "done") {
-    List<ToDo> myList = [];
-    for (var i = 0; i < list.length; i++) {
-      // TO DO
-      var currentElement = list[i];
-      if (currentElement.value == true) myList.add(currentElement);
-    }
-    return myList;
-  }
-  return list;
-}
+

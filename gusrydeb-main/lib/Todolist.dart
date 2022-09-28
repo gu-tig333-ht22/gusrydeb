@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'ToDoListView.dart';
 import 'addtodoview.dart';
 import 'main.dart';
+import 'InternetFetcher.dart';
 
 class Todolist extends StatefulWidget {
   final List<ToDo> list;
@@ -37,7 +38,7 @@ class _TodolistState extends State<Todolist> {
         card.message,
         style: (TextStyle(
           fontSize: 20,
-          decoration: card.value ? TextDecoration.lineThrough : null,
+          decoration: card.IsDone ? TextDecoration.lineThrough : null,
           decorationThickness: 1,
         )),
       ),
@@ -49,47 +50,83 @@ class _TodolistState extends State<Todolist> {
         },
       ),
       controlAffinity: ListTileControlAffinity.leading,
-      value: card.value,
-      onChanged: (val) {
-        setState(() {
-          card.value = val!;
-        });
-      },
-    ));
+      value: card.IsDone,
+      onChanged: (value) {
+        var state = Provider.of<MyState>(context, listen: false);
+          state.updatingTodo(card);
+          }
+        ),
+    );
   }
 }
 
 class ToDo {
-  Checkbox checkbox = const Checkbox(value: false, onChanged: null);
+ // Checkbox checkbox = const Checkbox(value: false, onChanged: null);
   String message = 'nothing';
-  bool value = false;
+  bool IsDone;
+  String id;
 
-  ToDo({required this.message, required this.checkbox});
+  ToDo({required this.message, this.IsDone =false, required this.id});
 
+    void todoIsDone(ToDo card) {
+    IsDone = !IsDone;
+    }
+
+  static Map<String, dynamic> toJson(ToDo card) {
+    return {
+      'title': card.message,
+      'done': card.IsDone,
+    };
   }
 
+  static ToDo fromJson(Map<String, dynamic> obj) {
+    return ToDo(
+      message: obj['title'],
+      IsDone: obj['done'],
+      id: obj['id'],
+    );
+  }
+}
   
 
 class MyState extends ChangeNotifier {
-  final List<ToDo> _list = [];
+  List<ToDo> _list = [];
   String _filterBy = "all";
+
 
   List<ToDo> get list => _list;
   String get filterBy => _filterBy;
 
-
-  void addCard(ToDo card) {
-    _list.add(card);
+  Future getTodo() async {
+    List<ToDo> list = await InternetFetcher.fetchingToDos();
+    _list = list;
     notifyListeners();
   }
 
-  void removeCard(ToDo card) {
-    _list.remove(card);
+
+  void addCard(ToDo card) async {
+    _list = await InternetFetcher.addTodo(card);
+    notifyListeners();
+  }
+
+  void removeCard(ToDo card) async {
+    _list = await InternetFetcher.DeletingToDo(card.id);
     notifyListeners();
   }
 
   void setFilterBy(String filterBy) {
-    _filterBy = filterBy;
+    this._filterBy = filterBy;
+    notifyListeners();
+  }
+
+   void updatingTodo(ToDo card) async {
+    card.todoIsDone(card);
+    _list = await InternetFetcher.updateToDo(card.id, card);
+    notifyListeners();
+  }
+
+  void IsDone(ToDo card) {
+    card.todoIsDone(card);
     notifyListeners();
   }
 }

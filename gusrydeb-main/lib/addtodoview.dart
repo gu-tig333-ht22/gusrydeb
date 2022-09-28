@@ -57,17 +57,18 @@ class AddToDoViewState extends State<AddToDoView> {
                       border: OutlineInputBorder(
                           borderSide:
                               BorderSide(width: 5.0, color: Colors.black)),
-                      hintText: 'What are you going to do?'),
+                      hintText: 'What are you going to do?',
+                      hintStyle: TextStyle(color: Colors.black)),
                 ),
               ),
               Container(height: 24),
               TextButton(
-                child: const Text("ADD +",
+                child: const Text("+ ADD",
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.pop(context, ToDo(message: message, 
-                                              checkbox: const Checkbox(value: false, onChanged: null)));
+                                               id: ''));
                 },
               )
             ])));

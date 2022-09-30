@@ -1,19 +1,13 @@
-import 'dart:html';
-import 'dart:js';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'ToDoListView.dart';
 import 'Todolist.dart';
-import 'addtodoview.dart';
 
 void main() {
   var state = MyState();
   state.getTodo();
-  runApp(
-    ChangeNotifierProvider(
+  runApp(ChangeNotifierProvider(
       create: (context) => state,
       child: MyApp(),
     ),
@@ -25,9 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "TIG169 TODO",
-      theme: ThemeData(
+      theme: ThemeData( 
         primarySwatch: Colors.grey,
+        unselectedWidgetColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.grey,
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
       ),
       home: TodoListView(),
     );
